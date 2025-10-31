@@ -1,19 +1,15 @@
 # src/demo_mcp/server.py
 
 from mcp.server import Server
-from mcp.types import Tool, TextContent  # 只保留存在的类型
+from mcp.types import Tool
+from typing import Any, Dict, List, AsyncGenerator
 
-# 创建 MCP 服务器实例
-server = Server("demo-mcp-server")
-
-# ✅ 正确示例：使用 yield 返回内容
-@server.tool("say_hello")
-async def say_hello(name: str):
+# 定义工具函数（使用生成器返回内容）
+async def say_hello(name: str) -> AsyncGenerator[Dict[str, Any], None]:
     """
     A simple tool that returns a greeting.
     """
     message = f"Hello, {name}! 🌟 This is your MCP server speaking."
-    # MCP 当前使用 yield 返回内容
     yield {
         "type": "update",
         "output": [
@@ -24,9 +20,7 @@ async def say_hello(name: str):
         ]
     }
 
-# ✅ 第二个工具：模拟天气
-@server.tool("get_weather")
-async def get_weather(location: str):
+async def get_weather(location: str) -> AsyncGenerator[Dict[str, Any], None]:
     """
     Mock weather tool.
     """
@@ -40,3 +34,44 @@ async def get_weather(location: str):
             }
         ]
     }
+
+# 手动创建 Tool 对象
+tools: List[Tool] = [
+    Tool(
+        name="say_hello",
+        description="Say hello to someone",
+        parameters={
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "The person's name"
+                }
+            },
+            "required": ["name"]
+        },
+        fn=say_hello
+    ),
+    Tool(
+        name="get_weather",
+        description="Get the weather for a location",
+        parameters={
+            "type": "object",
+            "properties": {
+                "location": {
+                    "type": "string",
+                    "description": "The city or place"
+                }
+            },
+            "required": ["location"]
+        },
+        fn=get_weather
+    )
+]
+
+# 创建 Server 实例，并传入 tools 列表
+server = Server(
+    name="demo-mcp-server",
+    version="0.1.0",
+    tools=tools
+)
