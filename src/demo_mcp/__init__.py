@@ -4,6 +4,8 @@ from .server import server
 import asyncio
 from mcp.server.serve import serve
 
+from .server import server, main
+__all__ = ["server", "main"]
 def main():
     print("🚀 Starting demo-mcp-server...")
     print("📦 MCP Server Name: demo-mcp-server")
