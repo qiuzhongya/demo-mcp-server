@@ -1,18 +1,16 @@
 # src/demo_mcp/__init__.py
 
-from .server import server
+from .server import main as _main
 import asyncio
-from mcp.server.serve import serve
 
-from .server import server, main
-__all__ = ["server", "main"]
 def main():
-    print("🚀 Starting demo-mcp-server...")
+    """Entry point for `demo-mcp-server` command"""
+    print("🚀 Starting demo-mcp-server (stdio mode)...")
     print("📦 MCP Server Name: demo-mcp-server")
-    print("🌐 Running on http://127.0.0.1:8080")
+    print("🔧 Tools: say_hello, get_weather")
+    print("💡 This server communicates via stdin/stdout (stdio)")
     print("💡 Use Ctrl+C to stop.")
-
     try:
-        asyncio.run(serve(server, host="127.0.0.1", port=8080))
+        asyncio.run(_main())
     except KeyboardInterrupt:
         print("\n👋 MCP server stopped. Goodbye!")
