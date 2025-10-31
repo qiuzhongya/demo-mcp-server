@@ -1,25 +1,16 @@
 [build-system]
-requires = ["setuptools>=61", "wheel"]
+requires = ["setuptools>=45"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "demo-mcp"
+name = "demo-mcp-server"
 version = "0.1.0"
-description = "A demo MCP server for Figma → Code translation"
-readme = "README.md"
-requires-python = ">=3.13"
+description = "Minimal MCP (Model Context Protocol) Server Demo"
+requires-python = ">=3.8"
 dependencies = [
-    "mcp>=0.3.0",
+    "mcp-server>=0.2.0",
+    "uvicorn"
 ]
 
-# ✅ 定义命令行脚本
 [project.scripts]
-demo-mcp-server = "demo_mcp.server:main"
-
-# ✅ 声明包结构
-[tool.setuptools.packages.find]
-where = ["src"]
-include = ["demo_mcp*"]
-
-[tool.setuptools.package-dir]
-"" = "src"
+demo-mcp-server = "demo_mcp:main"
