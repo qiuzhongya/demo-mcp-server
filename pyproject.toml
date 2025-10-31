@@ -6,16 +6,12 @@ build-backend = "hatchling.build"
 name = "demo-mcp-server"
 version = "0.1.0"
 dependencies = [
-    "mcp>=1.18.0",
-    "uvicorn>=0.27.0",
-    "starlette>=0.32.0",
+    "mcp>=1.18.0",  # 确保支持 lowlevel API
 ]
 
-# ✅ 添加 scripts：定义命令行入口
 [project.scripts]
 demo-mcp-server = "demo_mcp:main"
 
-# Hatch 构建配置
 [tool.hatch.build.targets.wheel]
 packages = ["src/demo_mcp"]
 
