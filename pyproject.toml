@@ -6,7 +6,13 @@ build-backend = "hatchling.build"
 name = "demo-mcp-server"
 version = "0.1.0"
 dependencies = [
-    "mcp>=1.18.0",  # ✅ 官方 MCP SDK（支持 server 模式）
+    "mcp>=1.18.0",
     "uvicorn>=0.27.0",
     "starlette>=0.32.0",
 ]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/demo_mcp"]
+
+[tool.hatch.build.targets.sdist]
+packages = ["src/demo_mcp"]
