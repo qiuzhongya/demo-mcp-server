@@ -11,6 +11,11 @@ dependencies = [
     "starlette>=0.32.0",
 ]
 
+# ✅ 添加 scripts：定义命令行入口
+[project.scripts]
+demo-mcp-server = "demo_mcp:main"
+
+# Hatch 构建配置
 [tool.hatch.build.targets.wheel]
 packages = ["src/demo_mcp"]
 
