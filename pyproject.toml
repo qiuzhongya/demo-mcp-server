@@ -1,16 +1,12 @@
 [build-system]
-requires = ["setuptools>=45"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
 name = "demo-mcp-server"
 version = "0.1.0"
-description = "Minimal MCP (Model Context Protocol) Server Demo"
-requires-python = ">=3.8"
 dependencies = [
-    "mcp-server[server]>=0.1.0",
-    "uvicorn"
+    "mcp>=1.18.0",  # ✅ 官方 MCP SDK（支持 server 模式）
+    "uvicorn>=0.27.0",
+    "starlette>=0.32.0",
 ]
-
-[project.scripts]
-demo-mcp-server = "demo_mcp:main"
