@@ -1,7 +1,7 @@
+# src/demo_mcp/server.py
+
 from mcp.server import Server
-from mcp.types import Tool, TextContent
-from mcp import ToolResult
-import asyncio
+from mcp.types import Tool, TextContent, ToolResult  # ✅ 全部从 types 导入
 
 # 创建 MCP 服务器实例
 server = Server("demo-mcp-server")
