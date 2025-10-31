@@ -1,29 +1,78 @@
 # src/demo_mcp/server.py
 
-from mcp.server import Server
-from mcp.types import Tool, TextContent
-from typing import List, AsyncGenerator
 import asyncio
+import mcp.server.stdio as stdio
+import mcp.types as types
+from mcp.server.lowlevel import NotificationOptions, Server
+from mcp.server.models import InitializationOptions
+from typing import Any, Dict
 
-# 创建 MCP 服务器
+# 创建 MCP 服务器实例
 server = Server("demo-mcp-server")
 
-# ✅ 使用 @server.tool 注册工具（官方支持）
-@server.tool("say_hello")
-async def say_hello(name: str) -> List[TextContent]:
-    """
-    Say hello to someone.
-    """
-    return [TextContent(type="text", text=f"Hello, {name}! 🌟 This is your MCP server speaking.")]
+# ---------------- 工具列表 ----------------
+@server.list_tools()
+async def handle_list_tools() -> list[types.Tool]:
+    return [
+        types.Tool(
+            name="say_hello",
+            description="Say hello to someone",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "The person's name"
+                    }
+                },
+                "required": ["name"]
+            },
+        ),
+        types.Tool(
+            name="get_weather",
+            description="Get the weather for a location (mock)",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "location": {
+                        "type": "string",
+                        "description": "The city or place"
+                    }
+                },
+                "required": ["location"]
+            },
+        ),
+    ]
 
-@server.tool("get_weather")
-async def get_weather(location: str) -> List[TextContent]:
-    """
-    Mock weather tool.
-    """
-    return [TextContent(type="text", text=f"Weather in {location}: ☀️ Sunny and 25°C")]
+# ---------------- 工具执行 ----------------
+@server.call_tool()
+async def handle_call_tool(name: str, arguments: Dict[str, Any]) -> list[types.TextContent]:
+    if name == "say_hello":
+        name_arg = arguments.get("name", "World")
+        if not name_arg:
+            return [types.TextContent(type="text", text="Missing required parameter: name")]
+        return [types.TextContent(type="text", text=f"Hello, {name_arg}! 🌟 This is your MCP server speaking.")]
 
-# 可选：启动日志
-print("🔧 MCP Tools Registered:")
-print("  • say_hello(name: str)")
-print("  • get_weather(location: str)")
+    elif name == "get_weather":
+        location = arguments.get("location", "Unknown")
+        if not location:
+            return [types.TextContent(type="text", text="Missing required parameter: location")]
+        return [types.TextContent(type="text", text=f"Weather in {location}: ☀️ Sunny and 25°C")]
+
+    raise ValueError(f"Unknown tool: {name}")
+
+# ---------------- 主入口 ----------------
+async def main() -> None:
+    async with stdio.stdio_server() as (reader, writer):
+        await server.run(
+            reader,
+            writer,
+            InitializationOptions(
+                server_name="demo-mcp-server",
+                server_version="0.1.0",
+                capabilities=server.get_capabilities(
+                    notification_options=NotificationOptions(),
+                    experimental_capabilities={},
+                ),
+            ),
+        )
