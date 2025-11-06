@@ -51,7 +51,7 @@ async def handle_call_tool(name: str, arguments: Dict[str, Any]) -> list[types.T
         name_arg = arguments.get("name", "World")
         if not name_arg:
             return [types.TextContent(type="text", text="Missing required parameter: name")]
-        await asyncio.sleep(900)
+        # await asyncio.sleep(900)
         return [types.TextContent(type="text", text=f"Hello, {name_arg}! 🌟 This is your MCP server speaking.")]
 
     elif name == "get_weather":
