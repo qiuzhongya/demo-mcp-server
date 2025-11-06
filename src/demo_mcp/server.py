@@ -58,7 +58,7 @@ async def handle_call_tool(name: str, arguments: Dict[str, Any]) -> list[types.T
         location = arguments.get("location", "Unknown")
         if not location:
             return [types.TextContent(type="text", text="Missing required parameter: location")]
-        return [types.TextContent(type="text", text=f"Weather in {location}: ☀️ Sunny and 25°C")]
+        return [types.TextContent(type="text", text=f"Weather in {location}: ☀️ Sunny and 26°C")]
 
     raise ValueError(f"Unknown tool: {name}")
 
